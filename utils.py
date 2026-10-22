@@ -85,7 +85,8 @@ def getNextAnsInput():
     with open("respDump.json", "r") as f:
         respDict = json.load(f)
 
-    nextAnsInput = int(input("Enter answer ID... (-1 for unknown!)\n"))-1
+    nextAnsInput = int(input("Enter answer ID... (0 for unknown, -1 for exit)\n"))-1
+    print(nextAnsInput)
     nextAnsId = respDict["answers"][nextAnsInput]["id"]
 
     return nextAnsId

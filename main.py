@@ -19,7 +19,7 @@ while True:
     body = generateNextBody()
 
     body["proposedAnswerId"] = getNextAnsInput()
-    if body["proposedAnswerId"] == 0: break
+    if body["proposedAnswerId"] == -2: break
 
     conn.request(
         method,
