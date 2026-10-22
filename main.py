@@ -32,10 +32,10 @@ while True:
     saveResponse(respDict)
 
     if displayAnswerStatus():
-        time.sleep(3)
+        time.sleep(configJson["cooldowns"][0])
 
     else:
         # Let the user read the last answer's hint if incorrectly answered #
-        time.sleep(10)
+        time.sleep(configJson["cooldowns"][1])
     
     
