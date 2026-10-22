@@ -32,8 +32,6 @@ def getRespDict(response):
         respDict = json.loads(respBody.decode())
 
     except Exception as e:
-        print(e)
-        print(str(respBody))
 
         try:
             respDict = json.loads(respBody)
@@ -43,7 +41,21 @@ def getRespDict(response):
 
     return respDict
 
+def refreshRespDump():
 
+    print("""Instructions on how to refresh the response dump:
+    1. Go to the Smart Revise questions section
+    2. Hold CTRL+SHIFT+I or right click and press "Inspect" to open inspect element
+    3. In the top bar, click "Network"
+    4. Complete a question (Does not matter if the question is correct)
+    5. Find the request that looks like: /answer/cb?xxxxxxxxxxxxxxx
+    6. Click that request, and click "Response"
+    7. Untoggle "Raw" if possible, then copy all of the JSON (ctrl+a should work)
+    8. Paste the output here!
+    """)
+
+    with open("respDump.json", "w") as f:
+        json.dump(json.loads(input("Paste response JSON here:\n")), f)
 
 def displayAnswerStatus():
 
@@ -54,7 +66,7 @@ def displayAnswerStatus():
         print("Correct!")
         return True
 
-    elif respDict["previousCorrectAnswerId"] == -1:
+    elif respDict["previousAnswerId"] == -1:
         print(respDict["previousAdviceText"])
     
     else:

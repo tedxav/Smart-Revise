@@ -7,10 +7,18 @@ from utils import *
 with open("config.json", "r") as f:
     configJson = json.load(f)
 
+try: 
+    with open("respDump.json", "r") as f:
+        respDict = json.load(f)
+
+        try: respDict["error"]; refreshRespDump()
+        except: "yeah all good  (i need to learn a better way to do this) "
+        
+except: 
+    refreshRespDump()
 
 method, url, headers = configJson["reqParams"]
 headers = addCredentialHeaders(headers)
-
 
 conn = http.client.HTTPSConnection(configJson["domain"])
 while True:
@@ -29,6 +37,7 @@ while True:
         )
 
     respDict = getRespDict(conn.getresponse())
+
     saveResponse(respDict)
 
     if displayAnswerStatus():
