@@ -99,10 +99,12 @@ def getNextAnsInput():
 
     nextAnsInput = -12345
 
-    while nextAnsInput not in range(-2,3):
+    while nextAnsInput not in range(-2,4):
         nextAnsInput = int(input("Enter answer ID... (0 for unknown, -1 for exit)\n"))-1
 
-    nextAnsId = respDict["answers"][nextAnsInput]["id"] if nextAnsInput != 0 else -1
+    if nextAnsInput >= 0:
+        nextAnsId = respDict["answers"][nextAnsInput]["id"]
+    else: nextAnsId = nextAnsInput
 
     return nextAnsId
 
