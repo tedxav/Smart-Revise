@@ -61,17 +61,6 @@ def generateNextBody():
     with open("config.json", "r") as f:
         body = json.load(f)["defaultBody"]
 
-    body = {
-        "ProposedAnswerId":-1,
-        "PackInstanceEntryId":202036226,
-        "QuestionOrdinal":3,
-        "QuestionHash":10179,
-
-        "TargetedTopicId":None,
-        "FilterExcludeMastered":False,
-        "FilterIncorrectOnly":False
-    }
-
     try:
         body["QuestionHash"] = respDict["questionHash"]
         body["PackInstanceEntryId"] = respDict["packInstanceId"]
