@@ -1,0 +1,27 @@
+{
+    "reqParams":[
+        "POST",
+        "/student/revise/answer?cb=933cc4ab369b13",
+        {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:157.0) Gecko/20100101 Firefox/157.0",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Content-Type": "application/json",
+            "RequestVerificationToken": "awesomesauce placeholder token",
+            "Cookie": "even more awesomesauce placeholder cookie"
+        }
+    ],
+
+    "defaultBody":{
+        "ProposedAnswerId":0,
+        "PackInstanceEntryId":0,
+        "QuestionOrdinal":0,
+        "QuestionHash":0,
+
+        "TargetedTopicId":null,
+        "FilterExcludeMastered":false,
+        "FilterIncorrectOnly":false
+    },
+
+    "domain": "smartrevise.online"
+    
+}
