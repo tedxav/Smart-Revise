@@ -6,6 +6,24 @@ def saveResponse(respDict):
 
 
 
+def addCredentialHeaders(headers):
+
+    with open("tokens.txt", "r+") as f:
+
+        lines = f.readlines()
+
+        if not lines:
+            print("No tokens/cookies found!")
+            headers["RequestVerificationToken"] = input("Enter \"RequestVerificationToken\" header:\n")
+            headers["Cookie"] = input("Enter \"Cookie\" header:\n")
+            f.write(f"{headers["RequestVerificationToken"]}\n{headers["Cookie"]}")
+
+        else:
+            headers["RequestVerificationToken"], headers["Cookie"] = lines[0].strip("\n"), lines[1].strip("\n")
+
+    return headers
+
+
 def getRespDict(response):
     respBody = response.read()
 
@@ -46,16 +64,16 @@ def displayAnswerStatus():
     
 
 
-def displayResponse():
+def displayQuestion():
 
     print("\n"*20)
 
     with open("respDump.json", "r") as f:
         respDict = json.load(f)
 
-    print(f"{respDict["questionText"]}")
+    print(f"{respDict["questionText"]}\n")
 
-    print("-"*20)
+
 
     for i in range(len(respDict["answers"])):
         print(f"{respDict["answers"][i]["answerText"]}\n^{[i+1]}^\n")
