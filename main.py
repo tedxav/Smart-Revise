@@ -29,6 +29,8 @@ with open("tokens.txt", "r+") as f:
 
 print(headers)
 
+
+
 for i in range(100):
 
     displayResponse()
@@ -45,5 +47,11 @@ for i in range(100):
     respDict = getRespDict(conn.getresponse())
     saveResponse(respDict)
 
-    time.sleep(3)
+    if displayAnswerStatus():
+        time.sleep(3)
+        
+    else:
+        # Let the user read the last answer's hint if incorrectly answered #
+        time.sleep(10)
+    
     

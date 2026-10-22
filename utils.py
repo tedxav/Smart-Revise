@@ -4,6 +4,8 @@ def saveResponse(respDict):
     with open("respDump.json", "w") as f:
         json.dump(respDict, f, indent=4)
 
+
+
 def getRespDict(response):
     respBody = response.read()
 
@@ -23,6 +25,20 @@ def getRespDict(response):
 
     return respDict
 
+def displayAnswerStatus():
+
+    with open("respDump.json", "r") as f:
+        respDict = json.load(f)
+
+    if respDict["previousCorrectAnswerId"] == respDict["previousAnswerId"]:
+        print("Correct!")
+        return True
+    
+    else:
+        print(f"Incorrect.\n{respDict["previousAdviceText"]}")
+        return False
+
+    
 
 
 def displayResponse():
