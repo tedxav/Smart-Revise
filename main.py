@@ -12,7 +12,6 @@ conn = http.client.HTTPSConnection(configJson["domain"])
 body = generateNextBody()
 
 
-
 method, url, headers = configJson["reqParams"]
 with open("tokens.txt", "r+") as f:
 
@@ -49,7 +48,7 @@ for i in range(100):
 
     if displayAnswerStatus():
         time.sleep(3)
-        
+
     else:
         # Let the user read the last answer's hint if incorrectly answered #
         time.sleep(10)

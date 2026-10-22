@@ -25,6 +25,8 @@ def getRespDict(response):
 
     return respDict
 
+
+
 def displayAnswerStatus():
 
     with open("respDump.json", "r") as f:
@@ -33,6 +35,9 @@ def displayAnswerStatus():
     if respDict["previousCorrectAnswerId"] == respDict["previousAnswerId"]:
         print("Correct!")
         return True
+
+    elif respDict["previousCorrectAnswerId"] == -1:
+        print(respDict["previousAdviceText"])
     
     else:
         print(f"Incorrect.\n{respDict["previousAdviceText"]}")
@@ -62,7 +67,7 @@ def getNextAnsInput():
     with open("respDump.json", "r") as f:
         respDict = json.load(f)
 
-    nextAnsInput = int(input("Enter answer ID...\n"))-1
+    nextAnsInput = int(input("Enter answer ID... (-1 for unknown!)\n"))-1
     nextAnsId = respDict["answers"][nextAnsInput]["id"]
 
     return nextAnsId
