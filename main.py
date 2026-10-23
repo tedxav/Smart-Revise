@@ -3,34 +3,44 @@ import json
 from utils import *
 import os
 
-with open("config.json", "r") as f:
-    configJson = json.load(f)
+# ------------------------------------------------ #
+
+with open("config.json", "r") as f: configJson = json.load(f)
 
 if not os.path.exists("respDump.json"): refreshRespDump()
-
-refreshCredentialHeaders()
-
 method, url, headers = configJson["reqParams"]
+
+checkCredentialHeaders()
 headers = addCredentialHeaders(headers)
 
 conn = http.client.HTTPSConnection(configJson["domain"])
+
+# ------------------------------------------------ #
+
 while True:
 
+    # try here prevents a crash if respdump is invalid #
     try: displayQuestion()
     except: refreshRespDump(); displayQuestion()
 
+    # get the next answer input and close if -2 (-1 input -1) #
     nextAnsInput = getAnswerInput()
     if nextAnsInput == -2: break
+
+    # generate next request body with inputted answer num #
     body = generateNextBody(nextAnsInput)
 
+    # send answer request and get response #
     conn.request(method, url, json.dumps(body), headers)
     respDict = getRespDict(conn.getresponse())
 
+    # prompting respDump refresh if unexpected response #
     if "error" in respDict or respDict == {}: 
         refreshRespDump()
     else:
         saveResponse(respDict)
         displayAnswerStatus(respDict)
 
+# try to close connection after -1 input #
 conn.close()
     
