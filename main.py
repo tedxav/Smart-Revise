@@ -19,9 +19,10 @@ httpsconn = http.client.HTTPSConnection(configJson["domain"])
 
 while True:
 
-    if not checkRespDumpValidity(): refreshRespDump()
+    lastRespDict = fetchRespDump()
+    if not checkRespDictValidity(lastRespDict): refreshRespDump()
 
-    displayQuestion()
+    displayQuestion(lastRespDict)
 
     # get the next answer input and close if -2 (-1 input -1) #
     nextAnsInput = getAnswerInput()
@@ -32,7 +33,7 @@ while True:
 
     # send answer request and get response #
     httpsconn.request(method, url, json.dumps(body), headers)
-    respDict = getRespDict(httpsconn.getresponse())
+    respDict = makeRespDict(httpsconn.getresponse())
 
     # prompting respDump refresh if unexpected response #
     if "error" in respDict or respDict == {}: 

@@ -3,19 +3,22 @@ import gzip, json, time, os
 # ------------------------------------------------ #
 
 def saveResponse(respDict):
-
-    # dumping response json to the respDump file #
     with open("respDump.json", "w") as f:
         json.dump(respDict, f, indent=4)
 
 # ------------------------------------------------ #
 
-def checkRespDumpValidity():
+def fetchRespDump():
     with open("respDump.json", "r") as f:
         respDump = json.load(f)
+    return respDump
+
+# ------------------------------------------------ #
+
+def checkRespDictValidity(respDict):
 
     # checking for required keys #
-    if not set(respDump.keys()).issuperset({"packInstanceId","questionText","answers",
+    if not set(respDict.keys()).issuperset({"packInstanceId","questionText","answers",
                                 "previousAnswerId", "previousCorrectAnswerId",
                                 "questionOrdinal","questionHash"}): return False 
     else: return True
@@ -62,7 +65,7 @@ def addCredentialHeaders(headers):
 
 # ------------------------------------------------ #
 
-def getRespDict(respObj):
+def makeRespDict(respObj):
 
     # get raw response body #
     respBody = respObj.read()
@@ -123,18 +126,15 @@ def displayAnswerStatus(respDict):
     
 # ------------------------------------------------ #
 
-def displayQuestion():
+def displayQuestion(respDict):
 
     # clear terminal #
     print("\n"*20)
 
-    with open("respDump.json", "r") as f:
-        respDump = json.load(f)
-
     # print question and related answer options #
-    print(f"{respDump["questionText"]}\n")
-    for i in range(len(respDump["answers"])):
-        print(f"{respDump["answers"][i]["answerText"]}\n^{[i+1]}^\n")
+    print(f"{respDict["questionText"]}\n")
+    for i in range(len(respDict["answers"])):
+        print(f"{respDict["answers"][i]["answerText"]}\n^{[i+1]}^\n")
 
 # ------------------------------------------------ #
 
@@ -151,25 +151,22 @@ def getAnswerInput():
 
 # ------------------------------------------------ #
 
-def generateNextBody(answerId):
-
-    with open("respDump.json", "r") as f:
-        respDump = json.load(f)
+def generateNextBody(respDict, answerId):
 
     with open("config.json", "r") as f:
         body = json.load(f)["defaultBody"]
 
     # finding internal answer id relating to user input (if not unknown/exiting) #
     if answerId >= 0:
-        nextAnsId = respDump["answers"][answerId]["id"]
+        nextAnsId = respDict["answers"][answerId]["id"]
     else: 
         nextAnsId = answerId
 
     # preparing next body #
     body["proposedAnswerId"] = nextAnsId
-    body["QuestionHash"] = respDump.get("questionHash")
-    body["PackInstanceEntryId"] = respDump.get("packInstanceId")
-    body["QuestionOrdinal"] = respDump.get("questionOrdinal")
+    body["QuestionHash"] = respDict.get("questionHash")
+    body["PackInstanceEntryId"] = respDict.get("packInstanceId")
+    body["QuestionOrdinal"] = respDict.get("questionOrdinal")
 
     return body
 
