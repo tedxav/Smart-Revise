@@ -12,22 +12,21 @@ refreshCredentialHeaders()
 method, url, headers = configJson["reqParams"]
 headers = addCredentialHeaders(headers)
 
-
 conn = http.client.HTTPSConnection(configJson["domain"])
 while True:
 
-    displayQuestion()
+    try: displayQuestion()
+    except: refreshRespDump(); displayQuestion()
 
     nextAnsInput = getAnswerInput()
     if nextAnsInput == -2: break
     body = generateNextBody(nextAnsInput)
 
     conn.request(method, url, json.dumps(body), headers)
-
     respDict = getRespDict(conn.getresponse())
 
-    if "error" in respDict: refreshRespDump()
-
+    if "error" in respDict: 
+        refreshRespDump()
     else:
         saveResponse(respDict)
         displayAnswerStatus(respDict)
