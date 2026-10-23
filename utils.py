@@ -8,6 +8,10 @@ def saveResponse(respDict):
 
 def addCredentialHeaders(headers):
 
+    try: open("tokens.txt", "r") 
+    except: open("tokens.txt", "w")
+
+
     with open("tokens.txt", "r+") as f:
         lines = f.readlines()
         if not lines:
@@ -28,6 +32,8 @@ def addCredentialHeaders(headers):
             f.write(f"{headers["RequestVerificationToken"]}\n{headers["Cookie"]}")
         else:
             headers["RequestVerificationToken"], headers["Cookie"] = lines[0].strip("\n"), lines[1].strip("\n")
+
+    
 
     return headers
 
