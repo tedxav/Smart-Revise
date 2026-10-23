@@ -3,7 +3,7 @@
         "POST",
         "/student/revise/answer?cb=0",
         {
-            "User-Agent": "Mozilla/5.0",
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Content-Type": "application/json",
             "RequestVerificationToken": "awesomesauce placeholder token",

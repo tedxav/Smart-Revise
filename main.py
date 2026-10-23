@@ -7,6 +7,7 @@ with open("config.json", "r") as f:
     configJson = json.load(f)
 
 if not os.path.exists("respDump.json"): refreshRespDump()
+
 refreshCredentialHeaders()
 
 method, url, headers = configJson["reqParams"]
@@ -25,7 +26,7 @@ while True:
     conn.request(method, url, json.dumps(body), headers)
     respDict = getRespDict(conn.getresponse())
 
-    if "error" in respDict: 
+    if "error" in respDict or respDict == {}: 
         refreshRespDump()
     else:
         saveResponse(respDict)
