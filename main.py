@@ -29,7 +29,7 @@ while True:
     if nextAnsInput == -2: break
 
     # generate next request body with inputted answer num #
-    body = generateNextBody(nextAnsInput)
+    body = generateNextBody(lastRespDict, nextAnsInput)
 
     # send answer request and get response #
     httpsconn.request(method, url, json.dumps(body), headers)
