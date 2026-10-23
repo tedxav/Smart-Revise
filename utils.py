@@ -1,4 +1,4 @@
-import gzip, json
+import gzip, json, time
 
 def saveResponse(respDict):
     with open("respDump.json", "w") as f:
@@ -71,21 +71,23 @@ def refreshRespDump():
     with open("respDump.json", "w") as f:
         json.dump(json.loads(input("Paste response JSON here:\n")), f)
 
-def displayAnswerStatus():
 
-    with open("respDump.json", "r") as f:
-        respDict = json.load(f)
+
+def displayAnswerStatus(respDict):
+
+    with open("config.json", "r") as f:
+        configJson = json.load(f)
 
     if respDict["previousCorrectAnswerId"] == respDict["previousAnswerId"]:
         print("Correct!")
-        return True
+        time.sleep(configJson["cooldowns"][0])
 
     elif respDict["previousAnswerId"] == -1:
         print(respDict["previousAdviceText"])
-    
+        time.sleep(configJson["cooldowns"][1])
     else:
         print(f"Incorrect.\n{respDict["previousAdviceText"]}")
-        return False
+        time.sleep(configJson["cooldowns"][1])
 
     
 
@@ -106,25 +108,17 @@ def displayQuestion():
 
 
 
-def getNextAnsInput():
-
-    with open("respDump.json", "r") as f:
-        respDict = json.load(f)
-
+def getAnswerInput():
     nextAnsInput = -12345
 
     while nextAnsInput not in range(-2,4):
         nextAnsInput = int(input("Enter answer ID... (0 for unknown, -1 for exit)\n"))-1
 
-    if nextAnsInput >= 0:
-        nextAnsId = respDict["answers"][nextAnsInput]["id"]
-    else: nextAnsId = nextAnsInput
-
-    return nextAnsId
+    return nextAnsInput
 
 
 
-def generateNextBody():
+def generateNextBody(answerId):
 
     with open("respDump.json", "r") as f:
         respDict = json.load(f)
@@ -132,11 +126,15 @@ def generateNextBody():
     with open("config.json", "r") as f:
         body = json.load(f)["defaultBody"]
 
-    try:
-        body["QuestionHash"] = respDict["questionHash"]
-        body["PackInstanceEntryId"] = respDict["packInstanceId"]
-        body["QuestionOrdinal"] = respDict["questionOrdinal"]
 
-    except: "cry"
+    if answerId >= 0:
+        nextAnsId = respDict["answers"][answerId]["id"]
+
+    else: nextAnsId = answerId
+
+    body["proposedAnswerId"] = nextAnsId
+    body["QuestionHash"] = respDict.get("questionHash")
+    body["PackInstanceEntryId"] = respDict.get("packInstanceId")
+    body["QuestionOrdinal"] = respDict.get("questionOrdinal")
 
     return body
