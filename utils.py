@@ -15,7 +15,7 @@ def checkRespDumpValidity():
         respDump = json.load(f)
 
     # checking for required keys #
-    if not respDump.issuperset({"packInstanceId","questionText","answers",
+    if not set(respDump.keys()).issuperset({"packInstanceId","questionText","answers",
                                 "previousAnswerId", "previousCorrectAnswerId",
                                 "questionOrdinal","questionHash"}): return False 
     else: return True
