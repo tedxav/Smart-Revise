@@ -1,20 +1,17 @@
-import gzip, json, time
+import gzip, json, time, os
 
 def saveResponse(respDict):
     with open("respDump.json", "w") as f:
         json.dump(respDict, f, indent=4)
 
 
+def refreshCredentialHeaders():
 
-def addCredentialHeaders(headers):
-
-    try: open("tokens.txt", "r") 
-    except: open("tokens.txt", "w")
-
+    if not os.path.exists("tokens.txt"): open("tokens.txt", "w")
 
     with open("tokens.txt", "r+") as f:
         lines = f.readlines()
-        if not lines:
+        if len(lines) != 2:
             print("No tokens/cookies found!")
             print("""Instructions on how to find cookie and token:
             1. Go to the Smart Revise questions section
@@ -27,13 +24,17 @@ def addCredentialHeaders(headers):
             7. Copy the headers labelled "RequestVerificationToken" and "Cookie"
             8. Paste the headers here!
             """)
-            headers["RequestVerificationToken"] = input("Enter \"RequestVerificationToken\" header:\n")
-            headers["Cookie"] = input("Enter \"Cookie\" header:\n")
-            f.write(f"{headers["RequestVerificationToken"]}\n{headers["Cookie"]}")
-        else:
-            headers["RequestVerificationToken"], headers["Cookie"] = lines[0].strip("\n"), lines[1].strip("\n")
 
-    
+            requestVerificationToken = input("Enter \"RequestVerificationToken\" header:\n")
+            cookie = input("Enter \"Cookie\" header:\n")
+            f.write(f"{requestVerificationToken}\n{cookie}")
+
+
+def addCredentialHeaders(headers):
+
+    with open("tokens.txt", "r+") as f:
+        lines = f.readlines()
+        headers["RequestVerificationToken"], headers["Cookie"] = lines[0].strip("\n"), lines[1].strip("\n")
 
     return headers
 
@@ -45,12 +46,10 @@ def getRespDict(response):
         respBody = gzip.decompress(respBody)
         respDict = json.loads(respBody.decode())
 
-    except Exception as e:
-
+    except:
         try:
             respDict = json.loads(respBody)
         except:
-            
             respDict = {}
 
     return respDict
