@@ -10,6 +10,18 @@ def saveResponse(respDict):
 
 # ------------------------------------------------ #
 
+def checkRespDumpValidity():
+    with open("respDump.json", "r") as f:
+        respDump = json.load(f)
+
+    # checking for required keys #
+    if not respDump.keys() >= ({"packInstanceId","questionText","answers",
+                                      "previousAnswerId", "previousCorrectAnswerId",
+                                      "questionOrdinal","questionHash"}): return False 
+    else: return True
+    
+# ------------------------------------------------ #
+
 def checkCredentialHeaders():
     # make credentials.txt if it does not exist #
     if not os.path.exists("credentials.txt"): open("credentials.txt", "w")
@@ -50,10 +62,10 @@ def addCredentialHeaders(headers):
 
 # ------------------------------------------------ #
 
-def getRespDict(response):
+def getRespDict(respObj):
 
     # get raw response body #
-    respBody = response.read()
+    respBody = respObj.read()
 
     try:
         # standard smartrevise responses are gzipped #
@@ -117,12 +129,12 @@ def displayQuestion():
     print("\n"*20)
 
     with open("respDump.json", "r") as f:
-        respDict = json.load(f)
+        respDump = json.load(f)
 
     # print question and related answer options #
-    print(f"{respDict["questionText"]}\n")
-    for i in range(len(respDict["answers"])):
-        print(f"{respDict["answers"][i]["answerText"]}\n^{[i+1]}^\n")
+    print(f"{respDump["questionText"]}\n")
+    for i in range(len(respDump["answers"])):
+        print(f"{respDump["answers"][i]["answerText"]}\n^{[i+1]}^\n")
 
 # ------------------------------------------------ #
 
@@ -142,22 +154,22 @@ def getAnswerInput():
 def generateNextBody(answerId):
 
     with open("respDump.json", "r") as f:
-        respDict = json.load(f)
+        respDump = json.load(f)
 
     with open("config.json", "r") as f:
         body = json.load(f)["defaultBody"]
 
     # finding internal answer id relating to user input (if not unknown/exiting) #
     if answerId >= 0:
-        nextAnsId = respDict["answers"][answerId]["id"]
+        nextAnsId = respDump["answers"][answerId]["id"]
     else: 
         nextAnsId = answerId
 
     # preparing next body #
     body["proposedAnswerId"] = nextAnsId
-    body["QuestionHash"] = respDict.get("questionHash")
-    body["PackInstanceEntryId"] = respDict.get("packInstanceId")
-    body["QuestionOrdinal"] = respDict.get("questionOrdinal")
+    body["QuestionHash"] = respDump.get("questionHash")
+    body["PackInstanceEntryId"] = respDump.get("packInstanceId")
+    body["QuestionOrdinal"] = respDump.get("questionOrdinal")
 
     return body
 

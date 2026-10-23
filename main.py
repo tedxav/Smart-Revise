@@ -13,15 +13,15 @@ method, url, headers = configJson["reqParams"]
 checkCredentialHeaders()
 headers = addCredentialHeaders(headers)
 
-conn = http.client.HTTPSConnection(configJson["domain"])
+httpsconn = http.client.HTTPSConnection(configJson["domain"])
 
 # ------------------------------------------------ #
 
 while True:
 
-    # try here prevents a crash if respdump is invalid #
-    try: displayQuestion()
-    except: refreshRespDump(); displayQuestion()
+    if not checkRespDumpValidity(): refreshRespDump()
+
+    displayQuestion()
 
     # get the next answer input and close if -2 (-1 input -1) #
     nextAnsInput = getAnswerInput()
@@ -31,8 +31,8 @@ while True:
     body = generateNextBody(nextAnsInput)
 
     # send answer request and get response #
-    conn.request(method, url, json.dumps(body), headers)
-    respDict = getRespDict(conn.getresponse())
+    httpsconn.request(method, url, json.dumps(body), headers)
+    respDict = getRespDict(httpsconn.getresponse())
 
     # prompting respDump refresh if unexpected response #
     if "error" in respDict or respDict == {}: 
@@ -41,6 +41,6 @@ while True:
         saveResponse(respDict)
         displayAnswerStatus(respDict)
 
-# try to close connection after -1 input #
-conn.close()
+# try to close http connection after -1 input #
+httpsconn.close()
     
