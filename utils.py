@@ -9,15 +9,23 @@ def saveResponse(respDict):
 def addCredentialHeaders(headers):
 
     with open("tokens.txt", "r+") as f:
-
         lines = f.readlines()
-
         if not lines:
             print("No tokens/cookies found!")
+            print("""Instructions on how to find cookie and token:
+            1. Go to the Smart Revise questions section
+            2. Hold CTRL+SHIFT+I or right click and press "Inspect" to open inspect element
+            3. In the top bar, click "Network"
+            4. Complete a question (Does not matter if the question is correct)
+            5. Find the request that looks like: /answer/cb?xxxxxxxxxxxxxxx
+            6. Click that request, and click "Headers"
+            7. Scroll to "Request Headers"
+            7. Copy the headers labelled "RequestVerificationToken" and "Cookie"
+            8. Paste the headers here!
+            """)
             headers["RequestVerificationToken"] = input("Enter \"RequestVerificationToken\" header:\n")
             headers["Cookie"] = input("Enter \"Cookie\" header:\n")
             f.write(f"{headers["RequestVerificationToken"]}\n{headers["Cookie"]}")
-
         else:
             headers["RequestVerificationToken"], headers["Cookie"] = lines[0].strip("\n"), lines[1].strip("\n")
 
