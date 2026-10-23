@@ -22,7 +22,7 @@
         "FilterIncorrectOnly":false
     },
 
-    "cooldowns":[3,10],
+    "cooldown": 3,
 
     "domain": "smartrevise.online"
 }

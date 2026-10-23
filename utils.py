@@ -95,17 +95,19 @@ def displayAnswerStatus(respDict):
     # correct msg #
     if respDict["previousCorrectAnswerId"] == respDict["previousAnswerId"]:
         print("Correct!")
-        time.sleep(configJson["cooldowns"][0])
+        time.sleep(configJson["cooldown"])
 
     # unknown answer msg #
     elif respDict["previousAnswerId"] == -1:
         print(respDict["previousAdviceText"])
-        time.sleep(configJson["cooldowns"][1])
+        time.sleep(configJson["cooldown"])
+        input("Press enter for next question!")
 
     # incorrect msg #
     else:
         print(f"Incorrect.\n{respDict["previousAdviceText"]}")
-        time.sleep(configJson["cooldowns"][1])
+        time.sleep(configJson["cooldown"])
+        input("Press enter for next question!")
     
 # ------------------------------------------------ #
 
